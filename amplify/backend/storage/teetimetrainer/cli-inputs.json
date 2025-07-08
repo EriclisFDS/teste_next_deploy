@@ -1,0 +1,14 @@
+{
+  "resourceName": "teetimetrainer",
+  "policyUUID": "6333a098",
+  "bucketName": "teetimetrainer-storage-c1c5b604",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

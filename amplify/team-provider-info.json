@@ -1,0 +1,73 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-teetimetrainer-dev-185628-authRole",
+      "UnauthRoleArn": "arn:aws:iam::339713072673:role/amplify-teetimetrainer-dev-185628-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::339713072673:role/amplify-teetimetrainer-dev-185628-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-teetimetrainer-dev-185628-deployment",
+      "UnauthRoleName": "amplify-teetimetrainer-dev-185628-unauthRole",
+      "StackName": "amplify-teetimetrainer-dev-185628",
+      "StackId": "arn:aws:cloudformation:us-east-2:339713072673:stack/amplify-teetimetrainer-dev-185628/78510460-2386-11ef-be86-0222a0ec1d5f",
+      "AmplifyAppId": "d2pmudda17ddmw"
+    },
+    "categories": {
+      "api": {
+        "teetimetrainer": {}
+      },
+      "function": {
+        "createUser": {
+          "adaptyApiKey": "secret_live_fDN9ejav.7WkngaBv30JTmMwZRNmek8vEsdRwr2g8",
+          "freeTrialDays": "2",
+          "userLimit": "500",
+          "deploymentBucketName": "amplify-teetimetrainer-dev-185628-deployment",
+          "s3Key": "amplify-builds/createUser-6f4958476e313275755a-build.zip"
+        },
+        "removeUser": {
+          "adaptyKey": "secret_live_fDN9ejav.7WkngaBv30JTmMwZRNmek8vEsdRwr2g8",
+          "deploymentBucketName": "amplify-teetimetrainer-dev-185628-deployment",
+          "s3Key": "amplify-builds/removeUser-6b5a4e4e6947764a7739-build.zip"
+        },
+        "sendMailerliteEvent": {
+          "amplitudeApiKey": " "
+        },
+        "updateUserStats": {
+          "amplitudeApiKey": "1dca6b25f94f9d20a15cd2bdeb459890",
+          "tinybirdToken": "p.eyJ1IjogIjI1OWJmNTE3LTFkNDItNDkzOC1iOTg2LTRjNGNmMzU1NzY1OCIsICJpZCI6ICJjMjcwMzZhMy0yMzNiLTRlZmMtOTg0NC01ZTczNmI4NmQ5ZmQiLCAiaG9zdCI6ICJ1cy1lYXN0LWF3cyJ9.U5Jf7vshs1u7jl9qmdGduKvqBXruu4kuBiSwGemrBs4",
+          "deploymentBucketName": "amplify-teetimetrainer-dev-185628-deployment",
+          "s3Key": "amplify-builds/updateUserStats-52724c454b4330794679-build.zip"
+        },
+        "cloneTrainingSession": {
+          "deploymentBucketName": "amplify-teetimetrainer-dev-185628-deployment",
+          "s3Key": "amplify-builds/cloneTrainingSession-4e34366c6733566b5243-build.zip"
+        },
+        "completeGridGame": {
+          "deploymentBucketName": "amplify-teetimetrainer-dev-185628-deployment",
+          "s3Key": "amplify-builds/completeGridGame-69493553687730504d6d-build.zip"
+        },
+        "createCourseSession": {
+          "deploymentBucketName": "amplify-teetimetrainer-dev-185628-deployment",
+          "s3Key": "amplify-builds/createCourseSession-2f75447559794e393850-build.zip"
+        },
+        "createTrainingSession": {
+          "deploymentBucketName": "amplify-teetimetrainer-dev-185628-deployment",
+          "s3Key": "amplify-builds/createTrainingSession-3637326e30712b797957-build.zip"
+        },
+        "decreaseUserStreak": {
+          "deploymentBucketName": "amplify-teetimetrainer-dev-185628-deployment",
+          "s3Key": "amplify-builds/decreaseUserStreak-482b3444733255756137-build.zip"
+        },
+        "updateUsername": {
+          "deploymentBucketName": "amplify-teetimetrainer-dev-185628-deployment",
+          "s3Key": "amplify-builds/updateUsername-61725553517166593434-build.zip"
+        }
+      },
+      "auth": {
+        "teetimetrainer9cd69c10": {}
+      },
+      "storage": {
+        "teetimetrainer": {}
+      }
+    }
+  }
+}

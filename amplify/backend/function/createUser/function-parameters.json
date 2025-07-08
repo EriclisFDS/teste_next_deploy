@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "auth": {
+      "teetimetrainer9cd69c10": [
+        "read",
+        "update"
+      ]
+    },
+    "storage": {
+      "teetimetrainer": [
+        "create",
+        "read",
+        "update"
+      ],
+      "User:@model(appsync)": [
+        "create",
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "userLimit",
+      "environmentVariableName": "USER_LIMIT"
+    },
+    {
+      "cloudFormationParameterName": "adaptyApiKey",
+      "environmentVariableName": "ADAPTY_API_KEY"
+    },
+    {
+      "cloudFormationParameterName": "freeTrialDays",
+      "environmentVariableName": "FREE_TRIAL_DAYS"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "storage": {
+      "Session:@model(appsync)": [
+        "create",
+        "read"
+      ],
+      "SessionDrill:@model(appsync)": [
+        "create",
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

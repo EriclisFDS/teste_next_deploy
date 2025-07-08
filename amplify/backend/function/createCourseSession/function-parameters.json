@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "storage": {
+      "Hole:@model(appsync)": [
+        "read"
+      ],
+      "CourseSession:@model(appsync)": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "SessionHole:@model(appsync)": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

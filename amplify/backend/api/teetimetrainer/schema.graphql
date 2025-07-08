@@ -1,0 +1,672 @@
+enum SessionScenario {
+  SIMULATOR
+  DRIVING_RANGE
+}
+
+enum DrillType {
+  PRACTICAL
+  TECHNICAL
+}
+
+enum CoachUserStatus {
+  PENDING
+  CONFIRMED
+  DENIED
+}
+
+enum SessionMode {
+  CALLIBRATION
+  CHALLENGE
+  PRACTICE
+}
+
+enum Zones {
+  GREEN
+  YELLOW
+  RED
+  HOLE
+  OUT
+  LEFT_YELLOW
+  RIGHT_YELLOW
+  LEFT_RED
+  RIGHT_RED
+}
+
+input DistanceScoreInput {
+  distance: Int!
+  shots: Int!
+}
+
+type DynamicDrillDifficulty {
+  beginner: String!
+  medium: String!
+  advanced: String!
+  pro: String!
+}
+
+type Mutation {
+  createTrainingSession(
+    userId: ID!
+    drillsIds: [ID]
+    time: Int
+    balls: Int
+    mode: SessionMode
+    name: String
+  ): Session
+    @function(name: "createTrainingSession-${env}")
+    @auth(rules: [{ allow: private }])
+  cloneTrainingSession(userId: ID!, sessionId: ID!): Session
+    @function(name: "cloneTrainingSession-${env}")
+    @auth(rules: [{ allow: private }])
+  createUser(id: ID!): String
+    @function(name: "createUser-${env}")
+    @auth(rules: [{ allow: private }])
+  updateUsername(userId: ID!, username: String): User
+    @function(name: "updateUsername-${env}")
+    @auth(rules: [{ allow: private }])
+  createCourseSession(
+    userId: ID!
+    courseId: ID!
+    playingCareer: Boolean
+  ): CourseSession
+    @function(name: "createCourseSession-${env}")
+    @auth(rules: [{ allow: private }])
+  removeUser: String
+    @function(name: "removeUser-${env}")
+    @auth(rules: [{ allow: private }])
+  completeGridGame(
+    userId: ID!
+    id: ID!
+    targetDistance: Int!
+    shots: Int!
+    distances: [DistanceScoreInput]
+    isCompleted: Boolean!
+  ): GridGameSession
+    @function(name: "completeGridGame-${env}")
+    @auth(rules: [{ allow: private }])
+}
+
+type S3Object {
+  bucket: String!
+  key: String!
+  region: String!
+}
+
+type Evaluation {
+  name: String!
+  score: Int!
+}
+
+type FeatureFlag {
+  name: String!
+  value: Boolean!
+}
+
+type User
+  @model(
+    mutations: { create: null, update: "updateUser", delete: "deleteUser" }
+  )
+  @auth(
+    rules: [
+      { allow: public, operations: [read] }
+      { allow: private, operations: [create, read] }
+      { allow: owner, operations: [create, read, update, delete] }
+    ]
+  ) {
+  id: ID!
+  name: String
+  username: String @index(name: "byUsername")
+  gender: String
+  age: String
+  handicap: String
+  objectives: [String]
+  evaluation: [Evaluation]
+  mySessions: [Session] @hasMany(indexName: "byUserSession")
+  myDrills: [UserDrills] @hasMany(indexName: "byUserDrills")
+  featureFlags: [FeatureFlag]
+  feedbacks: [Feedback] @hasMany(indexName: "byUserFeedback")
+  userSkills: [UserSkill] @hasMany(indexName: "byUserSkill")
+  vote: [Vote] @hasMany(indexName: "byUserVote")
+  courseSessions: [CourseSession] @hasMany(indexName: "byUserCourseSession")
+  bullseyeSessions: [BullseyeSession]
+    @hasMany(indexName: "byUserBullseyeSession")
+  bullseye: [UserBullseye] @hasMany(indexName: "byUserBullseye")
+  targetSets: [TargetSet] @hasMany(indexName: "byUserTargetSet")
+  gridGameSessions: [GridGameSession]
+    @hasMany(indexName: "byUserGridGameSession")
+  gridGameHighScore: [GridGameHighScore]
+    @hasMany(indexName: "byUserGridGameHighScore")
+  deleted: Boolean
+  coachUserId: ID @index(name: "byCoachUserId")
+  myCoach: CoachUser @hasOne(fields: ["coachUserId"])
+  myCoachSessions: [CoachSessionUser] @hasMany(indexName: "byUserId")
+}
+
+type UserDrills
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [] }
+      { allow: private, operations: [create, read] }
+      { allow: owner, operations: [create, read, update, delete] }
+    ]
+  ) {
+  userId: ID! @index(name: "byUserDrills")
+  user: User @belongsTo(fields: ["userId"])
+  drillId: ID! @index(name: "byDrillUsers")
+  drill: Drill @belongsTo(fields: ["drillId"])
+  notes: String
+  currentLevel: Int
+  lastNumberOfHits: Int
+}
+
+type Feedback
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: private, operations: [create, read] }
+    ]
+  ) {
+  id: ID!
+  score: Int
+  details: String
+  screen: String
+  userId: ID! @index(name: "byUserFeedback")
+  user: User @belongsTo(fields: ["userId"])
+}
+
+type Vote
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: private, operations: [create, read] }
+    ]
+  ) {
+  id: ID!
+  feature: String!
+  userId: ID! @index(name: "byUserVote")
+  user: User @belongsTo(fields: ["userId"])
+}
+
+type Skill
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  name: String!
+  trackingName: String
+  description: String
+  drills: [Drill] @hasMany(indexName: "bySkillDrill")
+  userSkills: [UserSkill] @hasMany(indexName: "bySkillUser")
+  games: [String]
+  challengeDrills: [ChallengeDrills] @hasMany(indexName: "bySkillId")
+}
+
+type UserSkill
+  @model
+  @auth(rules: [{ allow: owner, operations: [read, update] }]) {
+  id: ID!
+  level: Int
+  greenZone: Int
+  redZone: Int
+  yellowZone: Int
+  holeZone: Int
+  outZone: Int
+  leftYellowZone: Int
+  rightYellowZone: Int
+  leftRedZone: Int
+  rightRedZone: Int
+  streak: Int
+  skillId: ID! @index(name: "bySkillUser")
+  skill: Skill @belongsTo(fields: ["skillId"])
+  userId: ID! @index(name: "byUserSkill")
+  user: User @belongsTo(fields: ["userId"])
+}
+
+type Drill
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  name: String!
+  trackingName: String
+  description: String!
+  goal: String!
+  videoId: String!
+  duration: Int!
+  skillId: ID! @index(name: "bySkillDrill")
+  skill: Skill @belongsTo(fields: ["skillId"])
+  sessionDrills: [SessionDrill] @hasMany(indexName: "byDrillId")
+  hidden: Boolean
+  tries: Int
+  level: Int
+  club: String
+  title: String
+  challenge: String!
+  users: [UserDrills] @hasMany(indexName: "byDrillUsers")
+  isDynamic: Boolean
+  thirdOption: Boolean
+  dynamicDifficulties: DynamicDrillDifficulty
+  challengeDrills: [ChallengeDrills] @hasMany(indexName: "byDrillId")
+  type: DrillType
+  coachNotes: [CoachDrillNotes] @hasMany(indexName: "byDrillCoaches")
+  coachSessionDrills: [CoachSessionDrill]
+    @hasMany(indexName: "byDrillId", fields: ["id"])
+}
+
+type Session
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [read] }
+      { allow: private, operations: [create, read] }
+      { allow: owner, operations: [create, read, update, delete] }
+    ]
+  ) {
+  id: ID!
+  parentId: String
+  name: String
+  userId: ID! @index(name: "byUserSession")
+  user: User @belongsTo(fields: ["userId"])
+  sessionDrills: [SessionDrill] @hasMany(indexName: "bySessionId")
+  duration: Int
+  isCompleted: Boolean
+  saved: Boolean
+  mode: SessionMode
+  scenario: SessionScenario
+}
+
+type Result {
+  coordinates: [Int]
+  level: Int
+  zone: Zones
+  isMiss: Boolean!
+}
+
+type SessionDrill
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [read] }
+      { allow: private, operations: [create, read] }
+      { allow: owner, operations: [create, read, update, delete] }
+    ]
+  ) {
+  id: ID!
+  isCompleted: Boolean!
+  sessionId: ID! @index(name: "bySessionId")
+  session: Session @belongsTo(fields: ["sessionId"])
+  drillId: ID! @index(name: "byDrillId")
+  drill: Drill @belongsTo(fields: ["drillId"])
+  results: [Result]
+  mode: SessionMode
+  playingCareer: Boolean
+}
+
+type Course
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  name: String!
+  description: String
+  holes: [Hole] @hasMany(indexName: "byCourseHole")
+  courseSessions: [CourseSession] @hasMany(indexName: "byCourseId")
+  image: S3Object!
+}
+
+type Hole
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  number: Int!
+  par: Int!
+  distance: Int!
+  flagDistance: Int!
+  courseId: ID! @index(name: "byCourseHole")
+  course: Course @belongsTo(fields: ["courseId"])
+  image: S3Object!
+  coverImage: S3Object!
+  sessionHoles: [SessionHole] @hasMany(indexName: "byHoleId")
+  water: [Int]
+  bunker: [Int]
+  woods: [Int]
+  flag: Int!
+  green: [Int]
+}
+
+type CourseSession
+  @model(
+    mutations: {
+      create: null
+      update: "updateCourseSession"
+      delete: "deleteCourseSession"
+    }
+  )
+  @auth(
+    rules: [
+      { allow: public, operations: [read] }
+      { allow: private, operations: [create, read] }
+      { allow: owner, operations: [create, read, update, delete] }
+    ]
+  ) {
+  id: ID!
+  userId: ID! @index(name: "byUserCourseSession")
+  user: User @belongsTo(fields: ["userId"])
+  sessionHoles: [SessionHole] @hasMany(indexName: "byCourseSessionId")
+  isCompleted: Boolean
+  courseId: ID! @index(name: "byCourseId")
+  course: Course @belongsTo(fields: ["courseId"])
+  playingCareer: Boolean
+}
+
+type SessionHole
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [read] }
+      { allow: private, operations: [create, read] }
+      { allow: owner, operations: [create, read, update, delete] }
+    ]
+  ) {
+  id: ID!
+  isCompleted: Boolean!
+  courseSessionId: ID! @index(name: "byCourseSessionId")
+  courseSession: CourseSession @belongsTo(fields: ["courseSessionId"])
+  holeId: ID! @index(name: "byHoleId")
+  hole: Hole @belongsTo(fields: ["holeId"])
+  results: [Result]
+}
+
+type Targets {
+  color: String
+  distance: Int
+}
+
+type BullseyeResult {
+  result: [Result]
+  distance: Int
+}
+
+type BullseyeSession
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [read] }
+      { allow: private, operations: [create, read] }
+      { allow: owner, operations: [create, read, update, delete] }
+    ]
+  ) {
+  id: ID!
+  userId: ID! @index(name: "byUserBullseyeSession")
+  user: User @belongsTo(fields: ["userId"])
+  targets: [Targets]
+  isCompleted: Boolean
+  difficulty: Int
+  scenario: SessionScenario
+  results: [BullseyeResult]
+  playingCareer: Boolean
+}
+
+type TargetSet
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [read] }
+      { allow: private, operations: [create, read] }
+      { allow: owner, operations: [create, read, update, delete] }
+    ]
+  ) {
+  id: ID!
+  userId: ID! @index(name: "byUserTargetSet")
+  user: User @belongsTo(fields: ["userId"])
+  targets: [Targets]
+  name: String
+}
+
+type BullseyeScore {
+  difficulty: Int
+  score: Int
+}
+
+type UserBullseye
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [] }
+      { allow: private, operations: [create, read] }
+      { allow: owner, operations: [create, read, update, delete] }
+    ]
+  ) {
+  userId: ID! @index(name: "byUserBullseye")
+  user: User @belongsTo(fields: ["userId"])
+  notes: String
+  scores: [BullseyeScore]
+}
+
+type DistanceRecord {
+  distance: Int!
+  shots: Int!
+}
+
+type GridGameSession
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [read] }
+      { allow: private, operations: [create, read] }
+      { allow: owner, operations: [create, read, update, delete] }
+    ]
+  ) {
+  id: ID!
+  userId: ID! @index(name: "byUserGridGameSession")
+  user: User @belongsTo(fields: ["userId"])
+  targetDistance: Int!
+  shots: Int!
+  distances: [DistanceRecord]
+  isCompleted: Boolean!
+}
+
+type GridGameHighScore
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [read] }
+      { allow: private, operations: [create, read] }
+      { allow: owner, operations: [create, read, update, delete] }
+    ]
+  ) {
+  id: ID!
+  userId: ID! @index(name: "byUserGridGameHighScore")
+  user: User @belongsTo(fields: ["userId"])
+  gridGameSessionId: ID! @index(name: "byGridGameSession")
+  targetDistance: Int!
+  shots: Int!
+}
+
+type AppInfo
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [read] }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  paywallVideoId: String
+  env: String
+}
+
+type Article
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [read] }
+      { allow: private, operations: [read] }
+    ]
+  ) {
+  videoId: String
+  title: String
+  text: String
+}
+
+type ChallengeDrills
+  @model
+  @auth(rules: [{ allow: private, operations: [read] }]) {
+  id: ID!
+  hidden: Boolean!
+  skillId: ID! @index(name: "bySkillId")
+  skill: Skill @belongsTo(fields: ["skillId"])
+  drillId: ID! @index(name: "byDrillId")
+  drill: Drill @belongsTo(fields: ["drillId"])
+  isFirstStep: Boolean!
+}
+
+type Coach
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [] }
+      { allow: private, operations: [read] }
+      { allow: owner, operations: [create, read, update, delete] }
+    ]
+  ) {
+  id: ID!
+  cognitoId: String! @index(name: "byCognitoId")
+  profileImage: S3Object
+  name: String!
+  lastName: String!
+  phoneNumber: String
+  email: String
+  bio: String
+  school: String
+  zipCode: String
+  address: String
+  state: String
+  city: String
+  country: String
+  students: [CoachUser] @hasMany(indexName: "byCoachId")
+  coachDrillNotes: [CoachDrillNotes] @hasMany(indexName: "byCoachId")
+  coachSessions: [CoachSession] @hasMany(indexName: "byCoachId")
+}
+
+type CoachUser
+  @model
+  @searchable
+  @auth(
+    rules: [
+      { allow: public, operations: [] }
+      { allow: private, operations: [read, update] }
+      { allow: owner, operations: [create, read, update, delete] }
+    ]
+  ) {
+  id: ID!
+  userId: ID @index(name: "byUserSession")
+  user: User @belongsTo(fields: ["userId"])
+  coachId: ID @index(name: "byCoachId")
+  coach: Coach @belongsTo(fields: ["coachId"])
+  notes: [CoachUserNotes] @hasMany(indexName: "byCoachUserId")
+  status: CoachUserStatus
+}
+
+type CoachSession
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [] }
+      { allow: private, operations: [read, update] }
+      { allow: owner, operations: [create, read, update, delete] }
+    ]
+  ) {
+  id: ID!
+  coachId: ID @index(name: "byCoachId")
+  coach: Coach @belongsTo(fields: ["coachId"])
+  name: String
+  students: [CoachSessionUser] @hasMany(indexName: "byUserId")
+  drills: [CoachSessionDrill] @hasMany(indexName: "byCoachSessionId")
+  duration: Int
+}
+
+type CoachSessionUser
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [] }
+      { allow: private, operations: [read, update] }
+      { allow: owner, operations: [create, read, update, delete] }
+    ]
+  ) {
+  id: ID!
+  userId: ID! @index(name: "byUserId")
+  user: User @belongsTo(fields: ["userId"])
+  coachId: ID! @index(name: "byCoachId")
+  coach: User @belongsTo(fields: ["coachId"])
+  coachSessionId: ID @index(name: "byCoachSessionId")
+  coachSession: CoachSession @belongsTo(fields: ["coachSessionId"])
+  timesPlayed: Int
+  lastCompleted: String
+}
+
+type CoachUserNotes
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [] }
+      { allow: private, operations: [read] }
+      { allow: owner, operations: [create, read, update, delete] }
+    ]
+  ) {
+  id: ID!
+  coachUserId: String! @index(name: "byCoachUserId")
+  notes: String
+}
+
+type CoachSessionDrill
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [] }
+      { allow: private, operations: [create, read, update, delete] }
+    ]
+  ) {
+  id: ID!
+  coachSessionId: String @index(name: "byCoachSessionId")
+  drillId: ID! @index(name: "byDrillId")
+  drill: Drill @belongsTo(fields: ["drillId"])
+}
+
+type CoachDrillNotes
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [] }
+      { allow: private, operations: [read] }
+      { allow: owner, operations: [create, read, update, delete] }
+    ]
+  ) {
+  id: ID!
+  coachId: ID! @index(name: "byCoachId")
+  coach: Coach @belongsTo(fields: ["coachId"])
+  drillId: ID! @index(name: "byDrillCoaches")
+  drill: Drill @belongsTo(fields: ["drillId"])
+  notes: String
+  share: Boolean
+}

@@ -1,0 +1,271 @@
+{
+  "Records": [
+    {
+      "eventID": "5aa818dd29ac5ad137bd5989833ca0ec",
+      "eventName": "MODIFY",
+      "eventVersion": "1.1",
+      "eventSource": "aws:dynamodb",
+      "awsRegion": "us-east-2",
+      "dynamodb": {
+        "ApproximateCreationDateTime": 1724271954,
+        "Keys": {
+          "id": {
+            "S": "c1c88849-50a4-4c30-9548-c0fccbe01f87"
+          }
+        },
+        "NewImage": {
+          "mode": {
+            "S": "CHALLENGE"
+          },
+          "owner": {
+            "S": "11cb4580-d0f1-7046-66a9-d1196d5c218a"
+          },
+          "createdAt": {
+            "S": "2024-08-21T20:25:33.780Z"
+          },
+          "note": {
+            "S": ""
+          },
+          "__typename": {
+            "S": "SessionDrill"
+          },
+          "drillId": {
+            "S": "75b1a895-23dc-44d6-8233-123276c14ef7"
+          },
+          "id": {
+            "S": "c1c88849-50a4-4c30-9548-c0fccbe01f87"
+          },
+          "sessionId": {
+            "S": "3ec847b0-b7f6-4360-bf06-43c173796c63"
+          },
+          "playingCareer": {
+            "BOOL": true
+          },
+          "results": {
+            "L": [
+              {
+                "M": {
+                  "isMiss": {
+                    "BOOL": false
+                  },
+                  "level": {
+                    "N": "4"
+                  },
+                  "zone": {
+                    "S": "GREEN"
+                  },
+                  "coordinates": {
+                    "L": [
+                      {
+                        "N": "4"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "M": {
+                  "isMiss": {
+                    "BOOL": false
+                  },
+                  "level": {
+                    "N": "4"
+                  },
+                  "zone": {
+                    "S": "GREEN"
+                  },
+                  "coordinates": {
+                    "L": [
+                      {
+                        "N": "4"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "M": {
+                  "isMiss": {
+                    "BOOL": true
+                  },
+                  "level": {
+                    "N": "4"
+                  },
+                  "zone": {
+                    "S": "YELLOW"
+                  },
+                  "coordinates": {
+                    "L": [
+                      {
+                        "N": "-1"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "M": {
+                  "isMiss": {
+                    "BOOL": true
+                  },
+                  "level": {
+                    "N": "4"
+                  },
+                  "zone": {
+                    "S": "RED"
+                  },
+                  "coordinates": {
+                    "L": [
+                      {
+                        "N": "-1"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "M": {
+                  "isMiss": {
+                    "BOOL": true
+                  },
+                  "level": {
+                    "N": "4"
+                  },
+                  "zone": {
+                    "S": "RED"
+                  },
+                  "coordinates": {
+                    "L": [
+                      {
+                        "N": "-1"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "M": {
+                  "isMiss": {
+                    "BOOL": true
+                  },
+                  "level": {
+                    "N": "4"
+                  },
+                  "zone": {
+                    "S": "RED"
+                  },
+                  "coordinates": {
+                    "L": [
+                      {
+                        "N": "-1"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "M": {
+                  "isMiss": {
+                    "BOOL": true
+                  },
+                  "level": {
+                    "N": "5"
+                  },
+                  "zone": {
+                    "S": "RED"
+                  },
+                  "coordinates": {
+                    "L": [
+                      {
+                        "N": "-1"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "M": {
+                  "isMiss": {
+                    "BOOL": true
+                  },
+                  "level": {
+                    "N": "5"
+                  },
+                  "zone": {
+                    "S": "RED"
+                  },
+                  "coordinates": {
+                    "L": [
+                      {
+                        "N": "-1"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "M": {
+                  "isMiss": {
+                    "BOOL": true
+                  },
+                  "level": {
+                    "N": "5"
+                  },
+                  "zone": {
+                    "S": "RED"
+                  },
+                  "coordinates": {
+                    "L": [
+                      {
+                        "N": "-1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "isCompleted": {
+            "BOOL": true
+          },
+          "updatedAt": {
+            "S": "2024-08-21T20:25:54.537Z"
+          }
+        },
+        "OldImage": {
+          "owner": {
+            "S": "11cb4580-d0f1-7046-66a9-d1196d5c218a"
+          },
+          "createdAt": {
+            "S": "2024-08-21T20:25:33.780Z"
+          },
+          "note": {
+            "S": ""
+          },
+          "__typename": {
+            "S": "SessionDrill"
+          },
+          "drillId": {
+            "S": "75b1a895-23dc-44d6-8233-123276c14ef7"
+          },
+          "id": {
+            "S": "c1c88849-50a4-4c30-9548-c0fccbe01f87"
+          },
+          "sessionId": {
+            "S": "3ec847b0-b7f6-4360-bf06-43c173796c63"
+          },
+          "isCompleted": {
+            "BOOL": false
+          },
+          "updatedAt": {
+            "S": "2024-08-21T20:25:33.780Z"
+          }
+        },
+        "SequenceNumber": "359637600003146696820040171",
+        "SizeBytes": 1046,
+        "StreamViewType": "NEW_AND_OLD_IMAGES"
+      },
+      "eventSourceARN": "arn:aws:dynamodb:us-east-2:130261235091:table/User-vzwxd76sh5bovdc7agsdjsgbd4-staging/stream/2024-01-03T14:12:36.123"
+    }
+  ]
+}

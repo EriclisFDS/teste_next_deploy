@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "storage": {
+      "UserDrills:@model(appsync)": [
+        "read"
+      ],
+      "Skill:@model(appsync)": [
+        "read"
+      ],
+      "UserSkill:@model(appsync)": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "Drill:@model(appsync)": [
+        "read"
+      ],
+      "Session:@model(appsync)": [
+        "read"
+      ],
+      "SessionDrill:@model(appsync)": [
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "tinybirdToken",
+      "environmentVariableName": "TINYBIRD_TOKEN"
+    },
+    {
+      "cloudFormationParameterName": "amplitudeApiKey",
+      "environmentVariableName": "AMPLITUDE_API_KEY"
+    }
+  ]
+}
