@@ -18,5 +18,6 @@ export const { runWithAmplifyServerContext, createAuthRouteHandlers } =
 export const amplifyApi = generateServerClientUsingCookies({
   config: config,
   cookies,
-  authMode: "userPool",
+  authMode: "apiKey", // switch to API_KEY
+  apiKey: config.aws_appsync_apiKey,
 });
